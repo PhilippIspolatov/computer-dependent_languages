@@ -1,0 +1,104 @@
+Microsoft (R) Macro Assembler Version 5.10                  4/11/18 15:47:42
+                                                             Page     1-1
+
+
+       1				﻿SSTACK	SEGMENT PARA STACK 'STA
+					CK'
+main_1.asm(1): warning A4001: Extra characters on line
+       2 0000  0040[					DB	 64 DUP('СТЕ
+					К____')
+       3	   D0 A1 D0 A2 D0	
+       4	   95 D0 9A 5F 5F	
+       5	   5F 5F		
+       6			 ]	
+       7				
+main_1.asm(2): error A2086: Data emitted with no segment
+       8				SSTACK	ENDS
+main_1.asm(3): error A2000: Block nesting error
+       9				
+      10 0000				DSEG	SEGMENT PARA PUBLIC 'DATA'
+      11 0000  0005					M DW 5
+      12 0002  0000					fakt1 DW ?
+      13 0004				DSEG	ENDS
+      14				
+      15 0000				CSEG	SEGMENT PARA PUBLIC 'CODE'
+      16						ASSUME CS:CSEG,DS:DSEG,
+					SS:SSTACK
+main_1.asm(11): error A2009: Symbol not defined: SSTACK
+      17				
+      18 0000				BEGIN	PROC FAR
+      19 0000  B8 ---- R				MOV	 AX, DSEG
+      20 0003  8E D8					MOV	 DS, AX
+      21						
+      22 0005  8B 0E 0000 R				mov cx, m
+      23						
+      24 0009  E8 0015 R				call p
+      25 000C  A3 0002 R				mov fakt1, ax
+      26						
+      27 000F  B4 4C			EXIT:	MOV	 AH, 4CH
+      28 0011  B0 00					MOV	 AL, 0
+      29 0013  CD 21					INT	 21H
+      30				
+      31 0015				BEGIN	ENDP
+      32				
+      33 0015				p proc
+      34 0015				.L1:
+      35 0015  55					push bp
+      36 0016  8B E9					mov	 bp, cx
+      37 0018  83 FD 01					cmp	 bp, 1
+      38 001B  7F 06					jg	 .L2     ; >
+      39 001D  B8 0001					mov	 ax, 1
+      40 0020  EB 07 90					jmp	 .L3
+      41 0023				.L2:
+      42 0023  49					dec	 cx
+      43 0024  E8 0015 R				call p
+      44 0027  F7 ED					imul bp
+      45 0029				.L3:
+      46 0029  5D					pop	 bp
+      47 002A  C3					ret
+      48 002B				p endp
+      49				
+      50 002B				CSEG	ENDS
+      51				END BEGIN
+Microsoft (R) Macro Assembler Version 5.10                  4/11/18 15:47:42
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	002B	PARA	PUBLIC	'CODE'
+DSEG . . . . . . . . . . . . . .  	0004	PARA	PUBLIC	'DATA'
+SSTACK . . . . . . . . . . . . .  	0000	FAR	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+BEGIN  . . . . . . . . . . . . .  	F PROC	0000	CSEG	Length = 0015
+
+EXIT . . . . . . . . . . . . . .  	L NEAR	000F	CSEG
+
+FAKT1  . . . . . . . . . . . . .  	L WORD	0002	DSEG
+
+M  . . . . . . . . . . . . . . .  	L WORD	0000	DSEG
+
+P  . . . . . . . . . . . . . . .  	N PROC	0015	CSEG	Length = 0016
+
+.L1  . . . . . . . . . . . . . .  	L NEAR	0015	CSEG
+.L2  . . . . . . . . . . . . . .  	L NEAR	0023	CSEG
+.L3  . . . . . . . . . . . . . .  	L NEAR	0029	CSEG
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  main_1		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     46 Source  Lines
+     46 Total   Lines
+     22 Symbols
+
+  46600 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      3 Severe  Errors

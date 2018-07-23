@@ -1,0 +1,97 @@
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-1
+
+
+				PUBLIC	PR_Out16S
+				EXTRN	PR_NewLine:NEAR
+				EXTRN	PR_Out16:NEAR
+				
+				
+				
+				
+				
+				
+ 0000				Code	SEGMENT	PUBLIC
+					ASSUME CS:Code
+				;----------------------------------------------
+				----------------------------------------
+				;Печатает переменную, переданную через стек, ка
+				к шестнадцатиричное число со знаком (15 как F, 
+				-15 как -F)
+				;----------------------------------------------
+				----------------------------------------
+ 0000				PR_Out16S	PROC	NEAR
+ 0000  55				PUSH		BP		
+						;передаем параметр
+ 0001  8B EC				MOV		BP,SP
+ 0003  50				PUSH		AX
+				
+ 0004  8B 46 04				MOV		AX,[BP+4]	
+						;получаем в AX число, которое н
+				адо распечатать
+ 0007  3D 0000				CMP		AX,0
+ 000A  7D 0A				JGE		LO16S_SkipMinus	
+						;если число отрицательное, то н
+				апишем - и передадим "перевернутое" значение в 
+				печать
+				
+ 000C  50				PUSH		AX
+				
+ 000D  B4 02				MOV		AH,2h
+ 000F  B2 2D				MOV		DL,'-'
+ 0011  CD 21				INT		21h
+ 0013  58				POP		AX
+ 0014  F7 D8				NEG		AX
+				
+ 0016				LO16S_SkipMinus:
+ 0016  50				PUSH		AX
+ 0017  E8 0000 E			CALL		PR_Out16
+ 001A  83 C4 02				ADD		SP,2		
+						;чистим стек
+				
+ 001D  58				POP		AX
+ 001E  5D				POP		BP
+ 001F  C3				RET
+ 0020				PR_Out16S	ENDP
+				;----------------------------------------------
+				----------------------------------------
+ 0020				Code	ENDS
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-2
+
+
+				
+				END
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0020	PARA	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+LO16S_SKIPMINUS  . . . . . . . .  	L NEAR	0016	CODE
+
+PR_NEWLINE . . . . . . . . . . .  	L NEAR	0000		External
+PR_OUT16 . . . . . . . . . . . .  	L NEAR	0000		External
+PR_OUT16S  . . . . . . . . . . .  	N PROC	0000	CODE	Global	Length = 0020
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  _out16s		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     44 Source  Lines
+     44 Total   Lines
+     14 Symbols
+
+  47022 + 446990 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

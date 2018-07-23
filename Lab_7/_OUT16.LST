@@ -1,0 +1,195 @@
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-1
+
+
+				PUBLIC	PR_Out16
+				EXTRN	PR_NewLine:NEAR
+				
+ 0000				Data	SEGMENT	PUBLIC
+ 0000  30 31 32 33 34 35		simbols	DB	'0123456789ABCDEF'
+       36 37 38 39 41 42	
+       43 44 45 46		
+ 0010				Data	ENDS
+				
+				
+				
+				
+ 0000				Code	SEGMENT	PUBLIC
+					ASSUME CS:Code, DS:Data
+				;----------------------------------------------
+				----------------------------------------
+				;Печатает переменную, переданную через стек, ка
+				к шестнадцатиричное число без знака (15 как F, 
+				-15 как FFF1)
+				;----------------------------------------------
+				----------------------------------------
+ 0000				PR_Out16	PROC	NEAR
+ 0000  55				PUSH		BP		
+							;передаем параметр
+ 0001  8B EC				MOV		BP,SP
+ 0003  50				PUSH		AX		
+							;используем для деления
+ 0004  52				PUSH		DX
+ 0005  53				PUSH		BX
+				
+ 0006  8B 46 04				MOV		AX,[BP+4]	
+							;получаем в АХ число, к
+				оторое надо распечатать
+ 0009  BB 0010				MOV		BX,16		
+							;делить будем на 16; BX
+				 целиком чтобы возникало
+									
+							;деление двойного слова
+				 (и не возникало переполнения)
+				
+					;а теперь, алгоритм следующий: предполо
+				жим в АХ лежит шестнадцатеричное A1C, тогда вна
+				чале мы выделим место под это число,
+					;то есть > ___ , а потом будем печатать
+				 со сдвигом влево: > __C , > _1C , > A1C
+				
+ 000C  50				PUSH		AX		
+							;сохраним АХ, потому чт
+				о нам его два раза печатать
+				
+									
+							;в этом цикле будем печ
+				атать необходимое количество пропусков
+ 000D				LO16_Div1:
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-2
+
+
+ 000D  BA 0000					MOV		DX,0
+ 0010  F7 F3					DIV		BX	
+							;AX делим на BX(основан
+				ие), остаток будем искать в DX
+ 0012  50					PUSH		AX	
+							;сохраним значение AX (
+				целая часть)
+ 0013  B4 02					MOV		AH,2	
+							;печатаем пропуск
+ 0015  B2 61					MOV		DL,'a'
+ 0017  CD 21					INT		21h
+ 0019  58					POP		AX	
+							;восстанавливаем число
+ 001A  3D 0000					CMP		AX,0	
+							;если оно не ноль
+ 001D  75 EE					JNE		LO16_Div1
+							;то прыг
+				
+ 001F  B4 02					MOV		AH,2
+ 0021  B2 08					MOV 		DL,8	
+							;делаем один откат наза
+				д
+ 0023  CD 21					INT 		21h
+				
+ 0025  58					POP		AX	
+							;восстанавливаем ИЗНАЧА
+				ЛЬНОЕ число
+				
+ 0026				LO16_Div2:
+ 0026  BA 0000					MOV		DX,0
+ 0029  F7 F3					DIV		BX	
+							;AX делим на BX(основан
+				ие), остаток будем искать в DX
+ 002B  50					PUSH		AX	
+							;сохраним значение AX (
+				целая часть)
+				
+						;CMP		DL,9	
+							;сравниваем с 9
+						;JA		LO16_AddA
+							;прыг если выше(больше?
+				)(добавляем смещение по символу "А", а не по "0
+				")
+						;ADD		DL,'0'	
+							;печатаем значение DX (
+				остаток)
+				
+ 002C  53					PUSH		BX
+ 002D  BB 0000 R				MOV   		BX, OFFSET simb
+				ols
+ 0030  8A C2					MOV		AL, DL
+ 0032  D7					XLAT
+ 0033  8A D0					MOV		DL, AL
+ 0035  5B					POP 		BX
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-3
+
+
+ 0036  B4 02					MOV		AH,2
+ 0038  EB 07 90					JMP		LO16_Add0
+				
+ 003B				LO16_AddA:
+ 003B  80 C2 41					ADD		DL,'A'
+ 003E  80 EA 0A					SUB		DL,10
+				
+ 0041				LO16_Add0:
+ 0041  CD 21					INT		21h	
+							;определились с символо
+				м, теперь выводим
+ 0043  B2 08					MOV		DL,8	
+							;смещаемся назад ДВАЖДЫ
+ 0045  CD 21					INT		21h
+ 0047  CD 21					INT		21h
+ 0049  58					POP		AX	
+							;восстанавливаем оставш
+				уюся часть
+ 004A  3D 0000					CMP		AX,0	
+							;если число еще не ноль
+ 004D  75 D7					JNE		LO16_Div2
+							;то прыг
+				
+				
+ 004F  5B				POP		BX
+ 0050  5A				POP		DX
+ 0051  58				POP		AX
+ 0052  5D				POP		BP
+ 0053  C3				RET
+				
+ 0054  C3				RET
+ 0055				PR_Out16	ENDP
+				;----------------------------------------------
+				----------------------------------------
+ 0055				Code	ENDS
+				
+				END
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0055	PARA	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0010	PARA	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+LO16_ADD0  . . . . . . . . . . .  	L NEAR	0041	CODE
+LO16_ADDA  . . . . . . . . . . .  	L NEAR	003B	CODE
+LO16_DIV1  . . . . . . . . . . .  	L NEAR	000D	CODE
+LO16_DIV2  . . . . . . . . . . .  	L NEAR	0026	CODE
+
+PR_NEWLINE . . . . . . . . . . .  	L NEAR	0000		External
+PR_OUT16 . . . . . . . . . . . .  	N PROC	0000	CODE	Global	Length = 0055
+
+SIMBOLS  . . . . . . . . . . . .  	L BYTE	0000	DATA
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  _out16		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     93 Source  Lines
+     93 Total   Lines
+     18 Symbols
+
+  47022 + 442895 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

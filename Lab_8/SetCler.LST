@@ -1,0 +1,112 @@
+Turbo Assembler	 Version 5.3	    04-24-18 23:43:41	    Page 1
+SetCler.ASM
+
+
+
+      1					 ;Составить подпрограмму с именем SetCler типа
+      2					 ;   Procedure (var A: LONGWORD; N:LONGWORD; P:LONGWORD)
+      3					 ;выполняющую установку	разряда	N битовой строки S
+      4					 ;в ноль, если P=0, в единицу,если P не	равен 0.
+      5
+      6					 .386
+      7	00000000			 .model	FLAT,PASCAL
+      8					 PUBLIC	SetCler
+      9
+     10
+     11	00000000			 .CODE
+     12	00000000			 SetCler PROC
+     13		  = DWORD PTR[EBP+20]	 A EQU DWORD PTR[EBP+20]	 ;наша строка
+     14		  = DWORD PTR[EBP+16]	 N EQU DWORD PTR[EBP+16]	 ;номер	разряда
+     15		  = DWORD PTR[EBP+12]	 L EQU DWORD PTR[EBP+12]
+     16		  = DWORD PTR[EBP+8]	 P EQU DWORD PTR[EBP+8]		 ;параметр
+     17
+     18	00000000  55			   PUSH	EBP			 ;пишем	старый адрес EBP
+     19	00000001  8B EC			   MOV EBP,ESP			 ;пишем	в EBP текущее значение ESP
+     20
+     21	00000003  53			   PUSH	EBX			 ;сохраняем регистры
+     22	00000004  56			   PUSH	ESI
+     23
+     24	00000005  8B 4D	0C		   MOV ECX, L
+     25	00000008  8B 75	10		   MOV ESI,N			 ;в ESI	грузим номер разряда
+     26	0000000B  8B 5D	14		   MOV EBX,A			 ;адрес	строки
+     27	0000000E  83 FE	20		   CMP ESI, 32
+     28	00000011  76 2C	90 90 90 90	   JNA M
+     29	00000017  8B 4D	0C		   MOV ECX, L
+     30	0000001A  8B 75	10		   MOV ESI, N
+     31	0000001D  2B CE			   SUB ECX, ESI
+     32	0000001F  BA 00000000		   MOV EDX, 0
+     33	00000024  8B C1			   MOV EAX, ECX
+     34	00000026  BE 00000020		   MOV ESI, 32
+     35	0000002B  F7 F6			   DIV ESI
+     36
+     37	0000002D  BA 00000000		   MOV EDX, 0
+     38	00000032  BE 00000004		   MOV ESI, 4
+     39	00000037  F7 E6			   MUL ESI
+     40	00000039  8B F0			   MOV ESI, EAX
+     41
+     42	0000003B  8B 5C	35 14		   MOV EBX, A[ESI]
+     43
+     44	0000003F			 M:
+     45	0000003F  B8 00000020		   MOV EAX, 32			 ;вычисляем сдвиг по старшим битам
+     46	00000044  2B C6			   SUB EAX, ESI			 ;в основной части
+     47	00000046  8B F0			   MOV ESI, EAX
+     48	00000048			 M0:
+     49	00000048  83 7D	08 00		   CMP P,0			 ;сравниваем режим с нулем
+     50	0000004C  74 0C	90 90 90 90	   JE M1			 ;если равно, то прыг на м1
+     51	00000052  0F AB	33		   BTS [EBX], ESI
+     52	00000055  EB 06	90 90 90	   JMP M2
+     53	0000005A			 M1:
+     54	0000005A  0F B3	33		   BTR [EBX], ESI
+     55	0000005D			 M2:
+     56	0000005D  5E			   POP ESI			 ;восстанавливаем регистры
+     57	0000005E  5B			   POP EBX
+Turbo Assembler	 Version 5.3	    04-24-18 23:43:41	    Page 2
+SetCler.ASM
+
+
+
+     58	0000005F  5D			   POP EBP
+     59	00000060  C2 000C		   RET 12
+     60	00000063			 SetCler ENDP
+     61					 END
+Turbo Assembler	 Version 5.3	    04-24-18 23:43:41	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04-24-18"
+??FILENAME			  Text	 "SetCler "
+??TIME				  Text	 "23:43:41"
+??VERSION			  Number 0503
+@32BIT				  Text	 1
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 SETCLER
+@INTERFACE			  Text	 004H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+A				  Text	 DWORD PTR[EBP+20]
+L				  Text	 DWORD PTR[EBP+12]
+M				  Near32 FLAT:003F
+M0				  Near32 FLAT:0048
+M1				  Near32 FLAT:005A
+M2				  Near32 FLAT:005D
+N				  Text	 DWORD PTR[EBP+16]
+P				  Text	 DWORD PTR[EBP+8]
+SETCLER				  Near32 FLAT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  0000 Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0063 Dword  Public  CODE
+

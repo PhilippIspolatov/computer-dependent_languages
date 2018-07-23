@@ -1,0 +1,132 @@
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-1
+
+
+				PUBLIC	PR_Out2
+				EXTRN	PR_NewLine:NEAR
+				
+				
+				
+				
+				
+				
+ 0000				Code	SEGMENT	PUBLIC
+					ASSUME CS:Code
+				;----------------------------------------------
+				----------------------------------------
+				;Печатает переменную, переданную через стек, ка
+				к двоичное число без знака (4 как 100, -4 как 1
+				111111111111100)
+				;----------------------------------------------
+				----------------------------------------
+ 0000				PR_Out2	PROC	NEAR
+ 0000  55				PUSH	BP			
+					;передаем параметр
+ 0001  8B EC				MOV	BP,SP
+ 0003  50				PUSH	AX
+ 0004  52				PUSH	DX
+ 0005  56				PUSH	SI
+				
+ 0006  8B 46 04				MOV	AX,[BP+4]		
+					;получаем в АХ число, которое надо расп
+				ечатать
+ 0009  BE 0010				MOV	SI,16			
+					;максимальное количество бит
+				
+				;избавляемся от лидирующих нулей
+ 000C				LO2_Shl1:
+ 000C  B6 00				MOV		DH,0
+ 000E  D1 E8				SHR		AX,1	
+ 0010  7E 0E				JLE		LO2_Shl2_CF	
+					;сдвигаемся влево пока не кончатся 0
+ 0012  EB 01 90				JMP		LO2_Shl1_CF	
+					;прыг если не выдвинули 1
+					;INC		DH
+					;JMP		LO2_Shl2_CF	
+					;прыг если выдвинули бит
+				
+ 0015				LO2_Shl1_CF:
+ 0015  4E				DEC		SI		
+					;минус один сдвинутый бит
+ 0016  75 F4				JNZ		LO2_Shl1	
+					;крутимся пока не выдвинем в CF 1 или н
+				е закончатся биты
+				
+ 0018				LO2_Shl2:
+ 0018  B6 00				MOV		DH,0
+ 001A  D1 E0				SHL		AX,1		
+					;сдвигаем еще на один бит
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-2
+
+
+ 001C  73 02				JNC		LO2_Shl2_CF   	
+					;прыг если не выдвинули 1(то есть в DH 
+				0)
+ 001E  FE C6				INC		DH		
+					;иначе получим тут 1
+				
+ 0020				LO2_Shl2_CF:
+ 0020  B2 30				MOV		DL,'0'
+ 0022  02 D6				ADD		DL,DH		
+					;получаем символ "1" или "0" в зависимо
+				сти от DH
+ 0024  50				PUSH		AX		
+					;сохраняем текущее состояние числа
+ 0025  B4 02				MOV		AH,2		
+					;для вывода символа из DL(9 для строки)
+ 0027  CD 21				INT		21h
+ 0029  58				POP		AX		
+					;востанавливаем число
+ 002A  4E				DEC		SI		
+					;минус один бит
+ 002B  75 EB				JNZ		LO2_Shl2	
+					;прыг если не ноль
+				
+ 002D  5E				POP		SI		
+					;эпилог, восстанавливаем регистры 
+ 002E  5A				POP		DX
+ 002F  58				POP		AX
+ 0030  5D				POP		BP
+ 0031  C3				RET
+ 0032				PR_Out2	ENDP
+				;----------------------------------------------
+				----------------------------------------
+ 0032				Code	ENDS
+				
+				END
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0032	PARA	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+LO2_SHL1 . . . . . . . . . . . .  	L NEAR	000C	CODE
+LO2_SHL1_CF  . . . . . . . . . .  	L NEAR	0015	CODE
+LO2_SHL2 . . . . . . . . . . . .  	L NEAR	0018	CODE
+LO2_SHL2_CF  . . . . . . . . . .  	L NEAR	0020	CODE
+
+PR_NEWLINE . . . . . . . . . . .  	L NEAR	0000		External
+PR_OUT2  . . . . . . . . . . . .  	N PROC	0000	CODE	Global	Length = 0032
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  _out2		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     62 Source  Lines
+     62 Total   Lines
+     16 Symbols
+
+  47036 + 444928 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

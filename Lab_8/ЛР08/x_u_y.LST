@@ -1,0 +1,73 @@
+Turbo Assembler	 Version 5.3	    04-25-18 12:12:48	    Page 1
+x_u_y.asm
+
+
+
+      1					 .386
+      2	00000000			 .model	flat, pascal
+      3
+      4					 public	x_u_y
+      5
+      6	00000000			 .code
+      7	00000000			 x_u_y:
+      8	00000000  55				 push ebp
+      9	00000001  8B EC				 mov  ebp, esp
+     10	00000003  83 C5	08			 add  ebp, 8
+     11
+     12	00000006  8B 45	08			 mov  eax, [ebp	+ 8] ; x
+     13	00000009  8B 5D	04			 mov  ebx, [ebp	+ 4] ; y
+     14	0000000C  8B 4D	00			 mov  ecx, [ebp]	 ; l
+     15	0000000F  33 D2				 xor  edx, edx
+     16
+     17	00000011				 circ:
+     18	00000011  0F A3	13				 bt   [ebx], edx
+     19	00000014  73 07	90 90 90 90			 jnc  e_cir
+     20
+     21	0000001A  0F AB	10				 bts  [eax], edx
+     22
+     23	0000001D				 e_cir:
+     24	0000001D  42					 inc  edx
+     25
+     26	0000001E  E2 F1					 loop circ
+     27
+     28	00000020			 exit:
+     29	00000020  5D				 pop  ebp
+     30
+     31	00000021  C2 000C			 ret  12
+     32					 end
+Turbo Assembler	 Version 5.3	    04-25-18 12:12:48	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04-25-18"
+??FILENAME			  Text	 "x_u_y	  "
+??TIME				  Text	 "12:12:48"
+??VERSION			  Number 0503
+@32BIT				  Text	 1
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 X_U_Y
+@INTERFACE			  Text	 004H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+CIRC				  Near32 FLAT:0011
+EXIT				  Near32 FLAT:0020
+E_CIR				  Near32 FLAT:001D
+X_U_Y				  Near32 FLAT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  0000 Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0024 Dword  Public  CODE
+

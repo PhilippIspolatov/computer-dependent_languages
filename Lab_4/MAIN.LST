@@ -1,0 +1,125 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/19/18 17:45:53
+                                                             Page     1-1
+
+
+       1				﻿TITLE		LAB_03
+main.asm(1): warning A4001: Extra characters on line
+       2					
+       3 0000					SSTACK	SEGMENT PARA STACK
+						'STACK'
+       4 0000  0040[						DB	 64 DUP
+					('СТЕК____')
+       5	   D0 A1 D0 A2 D0	
+       6	   95 D0 9A 5F 5F	
+       7	   5F 5F		
+       8			 ]	
+       9				
+      10 0300					SSTACK	ENDS
+      11					
+      12 0000					DSEG	SEGMENT PARA PUBLIC 'DA
+					TA'
+      13 0000  01 02 03 04 05			X		DB	 1,2,3,
+					4,5
+      14 0005  01 02 03 04 05					DB	 1,2,3,
+					4,5
+      15 000A  01 02 03 04 05					DB	 1,2,3,
+					4,5
+      16 000F  01 02 03 04 05					DB	 1,2,3,
+					4,5
+      17 0014  01 02 03 04 05					DB	 1,2,3,
+					4,5
+      18 0019					DSEG	ENDS
+      19				
+      20				SUBTTL		MAIN
+Microsoft (R) Macro Assembler Version 5.10                  3/19/18 17:45:53
+                                                             Page     1-2
+MAIN                                                        
+
+      21				PAGE
+      22 0000					CSEG	SEGMENT PARA PUBLIC 'CO
+					DE'
+      23							ASSUME CS:CSEG,
+					DS:DSEG,SS:SSTACK
+      24					
+      25 0000					BEGIN	PROC FAR
+      26 0000  B8 ---- R					MOV	 AX, DS
+					EG
+      27 0003  8E D8						MOV	 DS, AX
+      28							
+      29 0005  B0 04				M1:		MOV	 AL, 4 
+					; Ранг - 1
+      30							
+      31 0007  BB 0000 R					MOV	 BX, OF
+					FSET X
+      32							
+      33 000A  8A C8						MOV	 CL, AL
+      34					
+      35 000C  BE 0001				M2:		MOV	 SI, 1
+      36 000F  BF 0005						MOV	 DI, 5
+      37					
+      38 0012  86 90 0000 R			M3:		XCHG DL, X[BX][
+					SI]
+      39 0016  86 91 0000 R					XCHG DL, X[BX][
+					DI]
+      40 001A  86 90 0000 R					XCHG X[BX][SI],
+					 DL
+      41							
+      42 001E  46						INC	 SI
+      43 001F  83 C7 05						ADD	 DI, 5
+      44				
+      45 0022  E2 EE						LOOP M3
+      46							
+      47 0024  8A C8						MOV	 CL, AL
+      48							
+      49 0026  FE C8						DEC	 AL
+      50 0028  83 C3 06						ADD	 BX, 6
+      51							
+      52 002B  E2 DF						LOOP M2
+      53							
+      54 002D  B4 4C				EXIT:	MOV	 AH, 4CH
+      55 002F  B0 00						MOV	 AL, 0
+      56 0031  CD 21						INT	 21H
+      57					
+      58 0033					BEGIN	ENDP
+      59					
+      60 0033					CSEG	ENDS
+      61							END BEGIN
+Microsoft (R) Macro Assembler Version 5.10                  3/19/18 17:45:53
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	0033	PARA	PUBLIC	'CODE'
+DSEG . . . . . . . . . . . . . .  	0019	PARA	PUBLIC	'DATA'
+SSTACK . . . . . . . . . . . . .  	0300	PARA	STACK	'STACK'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+BEGIN  . . . . . . . . . . . . .  	F PROC	0000	CSEG	Length = 0033
+
+EXIT . . . . . . . . . . . . . .  	L NEAR	002D	CSEG
+
+M1 . . . . . . . . . . . . . . .  	L NEAR	0005	CSEG
+M2 . . . . . . . . . . . . . . .  	L NEAR	000C	CSEG
+M3 . . . . . . . . . . . . . . .  	L NEAR	0012	CSEG
+
+X  . . . . . . . . . . . . . . .  	L BYTE	0000	DSEG
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  main		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     56 Source  Lines
+     56 Total   Lines
+     21 Symbols
+
+  46510 + 445534 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

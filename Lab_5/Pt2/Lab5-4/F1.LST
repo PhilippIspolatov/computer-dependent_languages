@@ -1,0 +1,71 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/22/18 13:07:43
+                                                             Page     1-1
+
+
+       1 0000				STK SEGMENT PARA STACK 'STACK'
+       2 0000  0064[				db 100 dup(0)
+       3	   00			
+       4			 ]	
+       5				
+       6 0064				STK ENDS
+       7				
+       8 0000				DS1 SEGMENT PARA PUBLIC 'DATA'
+       9 0000  58				X db 'X'
+      10 0001				DS1 ENDS
+      11				
+      12				PUBLIC m3
+      13				EXTRN m2:far
+      14				
+      15 0000				CS1 SEGMENT PARA PUBLIC 'CODE'
+      16					assume CS:CS1, DS:DS1, SS:STK
+      17				
+      18 0000				m1:
+      19 0000  B8 ---- R			mov ax, ds1
+      20 0003  8E D8				mov ds, ax
+      21					
+      22 0005  EA 0000 ---- E			jmp m2
+      23				
+      24 000A				m3:
+      25 000A  B8 4C00				mov ax, 4c00h
+      26 000D  CD 21				int 21h
+      27				
+      28 000F				CS1 ENDS
+      29				
+      30				PUBLIC X
+      31				
+      32				END m1
+Microsoft (R) Macro Assembler Version 5.10                  3/22/18 13:07:43
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CS1  . . . . . . . . . . . . . .  	000F	PARA	PUBLIC	'CODE'
+DS1  . . . . . . . . . . . . . .  	0001	PARA	PUBLIC	'DATA'
+STK  . . . . . . . . . . . . . .  	0064	PARA	STACK	'STACK'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+M1 . . . . . . . . . . . . . . .  	L NEAR	0000	CS1
+M2 . . . . . . . . . . . . . . .  	L FAR 	0000		External
+M3 . . . . . . . . . . . . . . .  	L NEAR	000A	CS1	Global
+
+X  . . . . . . . . . . . . . . .  	L BYTE	0000	DS1	Global
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  F1		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     29 Source  Lines
+     29 Total   Lines
+     19 Symbols
+
+  46634 + 447378 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

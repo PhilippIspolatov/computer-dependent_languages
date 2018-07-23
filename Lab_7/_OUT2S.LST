@@ -1,0 +1,100 @@
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-1
+
+
+				PUBLIC	PR_Out2S
+				EXTRN	PR_NewLine:NEAR
+				EXTRN	PR_Out2:NEAR
+				
+				
+				
+				
+				
+				
+ 0000				Code	SEGMENT	PUBLIC
+					ASSUME CS:Code
+				;----------------------------------------------
+				----------------------------------------
+				;Печатает переменную, переданную через стек, ка
+				к двоичное число со знаком (4 как 100, -4 как -
+				100)
+				;----------------------------------------------
+				----------------------------------------
+ 0000				PR_Out2S	PROC	NEAR
+ 0000  55				PUSH		BP		
+					;передаем параметр
+ 0001  8B EC				MOV		BP,SP
+ 0003  50				PUSH		AX
+				
+ 0004  8B 46 04				MOV		AX,[BP+4]	
+					;получаем в AX число, которое надо расп
+				ечатать
+ 0007  3D 0000				CMP		AX,0
+ 000A  7D 0A				JGE		LO2S_SkipMinus	
+					;если число отрицательное, то напишем -
+				 и передадим "перевернутое" значение в печать
+				
+ 000C  50				PUSH		AX		
+					;сохраняем число
+ 000D  B4 02				MOV		AH,2h		
+					;выводим минус
+ 000F  B2 2D				MOV		DL,'-'
+ 0011  CD 21				INT		21h
+ 0013  58				POP		AX		
+					;восстанавливаем число
+ 0014  F7 D8				NEG		AX		
+					;двоичное дополнение(здесь из дополнени
+				я в число?)
+				
+ 0016				LO2S_SkipMinus:
+ 0016  50				PUSH		AX
+ 0017  E8 0000 E			CALL		PR_Out2
+ 001A  83 C4 02				ADD		SP,2		
+					;чистим стек
+				
+ 001D  58				POP		AX
+ 001E  5D				POP		BP
+ 001F  C3				RET
+ 0020				PR_Out2S	ENDP
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Page     1-2
+
+
+				;----------------------------------------------
+				----------------------------------------
+ 0020				Code	ENDS
+				
+				END
+Microsoft (R) Macro Assembler Version 5.10                  4/18/18 14:21:28
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0020	PARA	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+LO2S_SKIPMINUS . . . . . . . . .  	L NEAR	0016	CODE
+
+PR_NEWLINE . . . . . . . . . . .  	L NEAR	0000		External
+PR_OUT2  . . . . . . . . . . . .  	L NEAR	0000		External
+PR_OUT2S . . . . . . . . . . . .  	N PROC	0000	CODE	Global	Length = 0020
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  _out2s		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     43 Source  Lines
+     43 Total   Lines
+     14 Symbols
+
+  47022 + 444942 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

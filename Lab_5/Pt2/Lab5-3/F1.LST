@@ -1,0 +1,127 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/22/18 12:24:52
+                                                             Page     1-1
+
+
+       1 0000				STK SEGMENT PARA STACK 'STACK'
+       2 0000  0064[				db 100 dup(0)
+       3	   00			
+       4			 ]	
+       5				
+       6 0064				STK ENDS
+       7				
+       8 0000				DS1 SEGMENT PARA COMMON 'DATA'
+       9 0000  FFFE[				db 65534 dup(?)
+      10	   ??			
+      11			 ]	
+      12				
+      13 FFFE  01				c1 db 1
+      14 FFFF				DS1 ENDS
+      15				
+      16 0000				DS2 SEGMENT PARA COMMON 'DATA'
+      17 0000  FFFE[				db 65534 dup(?)
+      18	   ??			
+      19			 ]	
+      20				
+      21 FFFE  02				c2 db 2
+      22 FFFF				DS2 ENDS
+      23				
+      24 0000				DS3 SEGMENT PARA COMMON 'DATA'
+      25 0000  FFFE[				db 65534 dup(?)
+      26	   ??			
+      27			 ]	
+      28				
+      29 FFFE  03				c3 db 3
+      30 FFFF				DS3 ENDS
+      31				
+      32 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+      33					assume CS:CSEG, DS:DS1
+      34 0000				main:
+      35 0000  B8 ---- R			mov ax, DS1
+      36 0003  8E D8				mov ds, ax
+      37					
+      38 0005  B4 02				mov ah, 02
+      39 0007  B2 30				mov dl, '0'
+      40 0009  02 16 FFFE R			add dl, c1
+      41					
+      42 000D  CD 21				int 21h
+      43				
+      44 000F  B2 0A			        mov dl, 10
+      45 0011  CD 21			        int 21h
+      46				
+      47 0013  B2 0D			        mov dl,13
+      48 0015  CD 21			        int 21h
+      49					
+      50					assume DS:DS2
+      51					
+      52 0017  B8 ---- R			mov ax, DS2
+      53 001A  8E D8				mov ds, ax
+      54					
+Microsoft (R) Macro Assembler Version 5.10                  3/22/18 12:24:52
+                                                             Page     1-2
+
+
+      55 001C  B4 02				mov ah, 02
+      56 001E  B2 30				mov dl, '0'
+      57 0020  02 16 FFFE R			add dl, c2
+      58					
+      59 0024  CD 21				int 21h
+      60				
+      61 0026  B2 0A			        mov dl, 10
+      62 0028  CD 21			        int 21h
+      63				
+      64 002A  B2 0D			        mov dl,13
+      65 002C  CD 21			        int 21h
+      66					
+      67					assume DS:DS3
+      68					
+      69 002E  B8 ---- R			mov ax, DS3
+      70 0031  8E D8				mov ds, ax
+      71					
+      72 0033  B4 02				mov ah, 02
+      73 0035  B2 30				mov dl, '0'
+      74 0037  02 16 FFFE R			add dl, c3
+      75					
+      76 003B  CD 21				int 21h
+      77					
+      78 003D  B8 4C00				mov ax, 4c00h
+      79 0040  CD 21				int 21h
+      80				
+      81 0042				CSEG ENDS
+      82				END main
+Microsoft (R) Macro Assembler Version 5.10                  3/22/18 12:24:52
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	0042	PARA	PUBLIC	'CODE'
+DS1  . . . . . . . . . . . . . .  	FFFF	PARA	COMMON	'DATA'
+DS2  . . . . . . . . . . . . . .  	FFFF	PARA	COMMON	'DATA'
+DS3  . . . . . . . . . . . . . .  	FFFF	PARA	COMMON	'DATA'
+STK  . . . . . . . . . . . . . .  	0064	PARA	STACK	'STACK'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+C1 . . . . . . . . . . . . . . .  	L BYTE	FFFE	DS1
+C2 . . . . . . . . . . . . . . .  	L BYTE	FFFE	DS2
+C3 . . . . . . . . . . . . . . .  	L BYTE	FFFE	DS3
+
+MAIN . . . . . . . . . . . . . .  	L NEAR	0000	CSEG
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  F1		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     70 Source  Lines
+     70 Total   Lines
+     21 Symbols
+
+  46634 + 447378 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

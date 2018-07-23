@@ -1,0 +1,105 @@
+Turbo Assembler	 Version 5.3	    04-25-18 12:12:48	    Page 1
+ppstart.asm
+
+
+
+      1					 .386
+      2	00000000			 .model	FLAT, PASCAL
+      3
+      4					 PUBLIC	START
+      5					 EXTERN	COUNT	 : NEAR
+      6					 EXTERN	SETCLER	 : NEAR
+      7					 EXTERN	X_U_Y	 : NEAR
+      8					 EXTERN	X_Y		 : NEAR
+      9
+     10	00000000			 .DATA
+     11	00000000  00000000 00000000   +	 S		 DD		 0, 0, 0, 0
+     12		  00000000 00000000
+     13	00000010  0F0F0F0F 00000055	 S1		 DD		 00001111000011110000111100001111B, 1010101B
+     14	00000018  3C3C3C3C 00000041	 S2		 DD		 00111100001111000011110000111100B, 1000001B
+     15
+     16	00000020  00000027		 L		 DD		 39
+     17	00000024  00000007		 N		 DD		 7
+     18	00000028  00000001		 P		 DD		 1
+     19
+     20	0000002C			 .CODE
+     21	00000000			 START:
+     22	00000000  68 00000010r			 push offset s1
+     23	00000005  FF 35	00000020r		 push l
+     24	0000000B  E8 00000000e			 call count
+     25
+     26	00000010  68 00000000r			 push offset s
+     27	00000015  6A 22				 push 34
+     28	00000017  6A 01				 push 1
+     29	00000019  E8 00000000e			 call setcler
+     30
+     31	0000001E  68 00000018r			 push offset s2
+     32	00000023  6A 22				 push 34
+     33	00000025  6A 01				 push 1
+     34	00000027  E8 00000000e			 call setcler
+     35
+     36	0000002C  68 00000000r			 push offset s
+     37	00000031  6A 22				 push 34
+     38	00000033  6A 00				 push 0
+     39	00000035  E8 00000000e			 call setcler
+     40
+     41	0000003A  68 00000018r			 push offset s2
+     42	0000003F  6A 22				 push 34
+     43	00000041  6A 00				 push 0
+     44	00000043  E8 00000000e			 call setcler
+     45
+     46	00000048  68 00000010r			 push offset s1
+     47	0000004D  68 00000018r			 push offset s2
+     48	00000052  FF 35	00000020r		 push l
+     49	00000058  E8 00000000e			 call x_y
+     50
+     51	0000005D  68 00000010r			 push offset s1
+     52	00000062  68 00000018r			 push offset s2
+     53	00000067  6A 26				 push 38
+     54	00000069  E8 00000000e			 call x_y
+     55
+     56	0000006E  C3				 RET
+     57					 END
+Turbo Assembler	 Version 5.3	    04-25-18 12:12:48	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04-25-18"
+??FILENAME			  Text	 "ppstart "
+??TIME				  Text	 "12:12:48"
+??VERSION			  Number 0503
+@32BIT				  Text	 1
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 PPSTART
+@INTERFACE			  Text	 004H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+COUNT				  Near32 ----:---- Extern
+L				  Dword	 FLAT:0020
+N				  Dword	 FLAT:0024
+P				  Dword	 FLAT:0028
+S				  Dword	 FLAT:0000
+S1				  Dword	 FLAT:0010
+S2				  Dword	 FLAT:0018
+SETCLER				  Near32 ----:---- Extern
+START				  Near32 FLAT:0000
+X_U_Y				  Near32 ----:---- Extern
+X_Y				  Near32 ----:---- Extern
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  002C Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  006F Dword  Public  CODE
+

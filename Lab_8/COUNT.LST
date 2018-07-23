@@ -1,0 +1,85 @@
+Turbo Assembler	 Version 5.3	    04-24-18 23:43:41	    Page 1
+COUNT.ASM
+
+
+
+      1					 ;—оставить подпрограмму с именем Count	типа
+      2					 ;	function (const	S: LONGWORD; L:LONGWORD)
+      3					 ;возвращающую число единиц битовой строки S длины L.
+      4
+      5					 .386
+      6	00000000			 .model	FLAT,PASCAL
+      7					 PUBLIC	COUNT
+      8
+      9	00000000			 .CODE
+     10	00000000			 COUNT:
+     11		  = DWORD PTR[EBP+12]	 A EQU DWORD PTR[EBP+12]       ;наша строка
+     12		  = DWORD PTR[EBP+8]	 L EQU DWORD PTR[EBP+8]	       ;длина строки
+     13	00000000  55			   PUSH	EBP		       ;пишем старый адрес EBP
+     14	00000001  8B EC			   MOV EBP,ESP		       ;пишем в	EBP текущее значение ESP
+     15
+     16	00000003  53			   PUSH	EBX		       ;сохран€ем регистры
+     17
+     18	00000004  B8 00000000		   MOV EAX,0		       ;результат
+     19	00000009  8B 5D	0C		   MOV EBX,A		       ;пишем адрес строки
+     20	0000000C  8B 4D	08		   MOV ECX,L		       ;длина строки
+     21	0000000F  BE 00000000		   MOV ESI,0		       ;индекс
+     22
+     23	00000014			 M:
+     24	00000014  0F A3	33		   BT [EBX], ESI
+     25	00000017  77 05	90 90 90 90	   JA M2		       ;если 0
+     26	0000001D  40			   INC EAX		       ;EAX += 1
+     27	0000001E			 M2:
+     28	0000001E  49			   DEC ECX		       ;уменьшаем значение длины
+     29	0000001F  74 12	90 90 90 90	   JZ M4		       ;до тех пор пока	длина != 0, проводим подсчет
+     30	00000025  46			   INC ESI
+     31	00000026  74 06	90 90 90 90	   JZ M3		       ;если CF	= 1, прыг на ћ3
+     32	0000002C  EB E6			   JMP M		       ;иначе прыг на ћ
+     33	0000002E			 M3:
+     34	0000002E  83 C3	04		   ADD EBX,4		       ;по сути	это дл€	второго	слова уже повтор
+     35	00000031  EB E1			   JMP M
+     36	00000033			 M4:
+     37
+     38	00000033  5B			   POP EBX
+     39	00000034  5D			   POP EBP		       ;восстанавливаем	регистры
+     40	00000035  C2 0008		   RET 8
+     41					 END
+Turbo Assembler	 Version 5.3	    04-24-18 23:43:41	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04-24-18"
+??FILENAME			  Text	 "COUNT	  "
+??TIME				  Text	 "23:43:41"
+??VERSION			  Number 0503
+@32BIT				  Text	 1
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 COUNT
+@INTERFACE			  Text	 004H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+A				  Text	 DWORD PTR[EBP+12]
+COUNT				  Near32 FLAT:0000
+L				  Text	 DWORD PTR[EBP+8]
+M				  Near32 FLAT:0014
+M2				  Near32 FLAT:001E
+M3				  Near32 FLAT:002E
+M4				  Near32 FLAT:0033
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  0000 Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0038 Dword  Public  CODE
+
